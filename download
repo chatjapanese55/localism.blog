@@ -1,0 +1,13 @@
+# robots.txt for https://localism.blog/
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Block admin or private paths (add as needed)
+Disallow: /admin/
+Disallow: /draft/
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://localism.blog/sitemap.xml
