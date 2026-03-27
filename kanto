@@ -1,0 +1,990 @@
+/* main.js — Kanto Blog static page logic */
+
+(function () {
+  "use strict";
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + "T00:00:00");
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // ── Copyright year ────────────────────────────────────────────────────────
+
+  var yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // ── Hamburger menu ────────────────────────────────────────────────────────
+
+  var hamburger = document.getElementById("hamburger");
+  var drawer    = document.getElementById("mobile-drawer");
+  var iconMenu  = document.getElementById("icon-menu");
+  var iconClose = document.getElementById("icon-close");
+
+  function openDrawer() {
+    drawer.classList.add("is-open");
+    drawer.setAttribute("aria-hidden", "false");
+    iconMenu.style.display  = "none";
+    iconClose.style.display = "block";
+    hamburger.setAttribute("aria-label", "Close menu");
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+    iconMenu.style.display  = "block";
+    iconClose.style.display = "none";
+    hamburger.setAttribute("aria-label", "Open menu");
+  }
+
+  if (hamburger && drawer) {
+    hamburger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      drawer.classList.contains("is-open") ? closeDrawer() : openDrawer();
+    });
+
+    document.addEventListener("click", function (e) {
+      if (drawer.classList.contains("is-open") && !drawer.contains(e.target) && e.target !== hamburger) {
+        closeDrawer();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeDrawer();
+    });
+  }
+
+  // ── Article cards ─────────────────────────────────────────────────────────
+
+  var grid       = document.getElementById("articles-grid");
+  var emptyState = document.getElementById("empty-state");
+
+  // ARTICLES is defined in articles.js (loaded before this script)
+  var articles = (typeof ARTICLES !== "undefined" && Array.isArray(ARTICLES)) ? ARTICLES : [];
+
+  // Sort newest first
+  articles = articles.slice().sort(function (a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  if (articles.length === 0) {
+    if (emptyState) emptyState.style.display = "block";
+  } else {
+    if (emptyState) emptyState.style.display = "none";
+
+    articles.forEach(function (article) {
+      var card = document.createElement("article");
+      card.className = "article-card";
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", "Read article: " + escHtml(article.title));
+
+      var thumbHtml = article.thumbnailUrl
+        ? '<div class="card-thumb"><img src="' + escHtml(article.thumbnailUrl) + '" alt="' + escHtml(article.title) + '" loading="lazy" /></div>'
+        : '<div class="card-thumb"><div class="card-thumb-placeholder">Kanto</div></div>';
+
+      card.innerHTML =
+        thumbHtml +
+        '<div class="card-body">' +
+          '<h3 class="card-title">' + escHtml(article.title) + '</h3>' +
+          '<p class="card-excerpt">' + escHtml(article.excerpt) + '</p>' +
+          '<div class="card-meta">' +
+            '<span class="card-meta-item">' +
+              '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+              escHtml(article.author) +
+            '</span>' +
+            '<span class="card-meta-item">' +
+              '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>' +
+              formatDate(article.date) +
+            '</span>' +
+          '</div>' +
+          '<span class="card-read-more">' +
+            'Read more ' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>' +
+          '</span>' +
+        '</div>';
+
+      card.addEventListener("click", function () { openModal(article); });
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(article); }
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Modal ─────────────────────────────────────────────────────────────────
+
+  var overlay    = document.getElementById("modal-overlay");
+  var modalClose = document.getElementById("modal-close");
+  var modalContent = document.getElementById("modal-content");
+
+  function openModal(article) {
+    var thumbHtml = article.thumbnailUrl
+      ? '<img class="modal-thumb" src="' + escHtml(article.thumbnailUrl) + '" alt="' + escHtml(article.title) + '" />'
+      : '<div class="modal-thumb-placeholder">Kanto</div>';
+
+    modalContent.innerHTML =
+      thumbHtml +
+      '<div class="modal-body">' +
+        '<h2 class="modal-title" id="modal-title">' + escHtml(article.title) + '</h2>' +
+        '<div class="modal-meta">' +
+          '<span class="modal-meta-item">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+            escHtml(article.author) +
+          '</span>' +
+          '<span class="modal-meta-item">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>' +
+            formatDate(article.date) +
+          '</span>' +
+        '</div>' +
+        '<p class="modal-text">' + escHtml(article.body) + '</p>' +
+      '</div>';
+
+    overlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    modalClose.focus();
+  }
+
+  function closeModal() {
+    overlay.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  if (modalClose) modalClose.addEventListener("click", closeModal);
+  if (overlay) {
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeModal();
+    });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && overlay && overlay.style.display !== "none") closeModal();
+  });
+
+})();
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:      #f5f0e8;
+  --cream-dark: #ede7d9;
+  --teal:       #2a7a6e;
+  --teal-light: #3a9e8f;
+  --teal-pale:  #e0f2ef;
+  --teal-dark:  #1d5a52;
+  --amber:      #d4793a;
+  --text-dark:  #1a1f2e;
+  --text-mid:   #4a5068;
+  --text-light: #7a8099;
+  --border:     #e0d8cc;
+  --white:      #ffffff;
+  --header-h:   56px;
+  --radius:     10px;
+  --shadow-sm:  0 1px 8px rgba(26,31,46,.06);
+  --shadow-md:  0 4px 20px rgba(26,31,46,.10);
+  --shadow-lg:  0 8px 32px rgba(26,31,46,.14);
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans:  'Inter', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--cream);
+  color: var(--text-dark);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ===== LAYOUT ===== */
+.container {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,.97);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  gap: .75rem;
+}
+
+.logo-link { flex-shrink: 0; display: inline-flex; }
+.logo-img  { height: 36px; width: auto; object-fit: contain; }
+
+/* Desktop nav */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: .1rem;
+  flex: 1;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.nav-link {
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  padding: .3rem .5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: color .15s, background .15s;
+}
+.nav-link:hover,
+.nav-link--active {
+  color: var(--teal);
+  background: var(--teal-pale);
+  font-weight: 700;
+}
+
+/* Become Editor button */
+.btn-become-editor {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--teal);
+  background: transparent;
+  border: 1.5px solid var(--teal);
+  border-radius: 6px;
+  padding: .4rem .85rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.btn-become-editor:hover {
+  background: var(--teal);
+  color: var(--white);
+}
+.btn-become-editor--full {
+  width: 100%;
+  justify-content: center;
+  padding: .65rem;
+  border-radius: 8px;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-mid);
+  flex-shrink: 0;
+}
+
+/* Mobile drawer */
+.mobile-drawer {
+  display: none;
+  border-top: 1px solid var(--border);
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+  padding: 1rem 0 1.5rem;
+}
+.mobile-drawer.is-open { display: block; }
+
+.mobile-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .25rem;
+  margin-bottom: 1rem;
+}
+.mobile-nav-link {
+  display: block;
+  text-align: center;
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  padding: .55rem .5rem;
+  border-radius: 6px;
+  background: #f7f3ec;
+  transition: color .15s, background .15s;
+}
+.mobile-nav-link:hover,
+.mobile-nav-link--active {
+  color: var(--teal);
+  background: var(--teal-pale);
+  font-weight: 700;
+}
+.mobile-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: .75rem 0;
+}
+
+/* Responsive show/hide */
+.desktop-only { display: inline-flex; }
+.mobile-only  { display: none; }
+
+@media (max-width: 768px) {
+  .desktop-nav  { display: none; }
+  .desktop-only { display: none; }
+  .mobile-only  { display: flex; }
+  .hamburger    { display: flex; }
+}
+
+/* ===== HERO ===== */
+.hero {
+  position: relative;
+  padding-top: calc(var(--header-h) + clamp(48px, 10vw, 80px));
+  padding-bottom: clamp(48px, 8vw, 80px);
+  background: linear-gradient(135deg, #1d5a52 0%, #2a7a6e 50%, #3a9e8f 100%);
+  overflow: hidden;
+}
+.hero-bg-pattern {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255,255,255,.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255,255,255,.06) 0%, transparent 50%);
+}
+.hero-content { position: relative; }
+
+.region-badge {
+  display: inline-block;
+  background: var(--amber);
+  color: var(--white);
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .35rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 1.25rem;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 5vw, 3.75rem);
+  font-weight: 800;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+  max-width: 700px;
+}
+.hero-title em {
+  color: #f0b96a;
+  font-style: italic;
+}
+
+.hero-desc {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,.82);
+  line-height: 1.75;
+  max-width: 560px;
+  margin-bottom: 2rem;
+}
+
+.btn-read-stories {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--white);
+  color: var(--teal-dark);
+  font-weight: 700;
+  font-size: .9rem;
+  padding: .7rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.15);
+  transition: background .15s;
+}
+.btn-read-stories:hover { background: #f0ebe0; }
+
+/* ===== ARTICLES SECTION ===== */
+.articles-section {
+  padding: 5rem 0;
+  background: var(--cream);
+}
+
+.section-header { margin-bottom: 3rem; }
+.section-label {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--teal);
+  margin-bottom: .5rem;
+}
+.section-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: .5rem;
+}
+.section-desc {
+  font-size: .95rem;
+  color: var(--text-light);
+}
+
+/* Article grid */
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+@media (max-width: 900px) { .articles-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 580px) { .articles-grid { grid-template-columns: 1fr; } }
+
+/* Article card */
+.article-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform .2s, box-shadow .2s;
+}
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.card-thumb {
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: var(--teal-pale);
+  position: relative;
+}
+.card-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .3s;
+}
+.article-card:hover .card-thumb img { transform: scale(1.04); }
+.card-thumb-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--teal-dark), var(--teal-light));
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.5);
+}
+
+.card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  line-height: 1.35;
+  margin-bottom: .6rem;
+}
+.card-excerpt {
+  font-size: .875rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: .78rem;
+  color: var(--text-light);
+}
+.card-meta-item {
+  display: flex; align-items: center; gap: .3rem;
+}
+.card-read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  font-size: .8rem;
+  font-weight: 600;
+  color: var(--teal);
+  margin-top: .75rem;
+  transition: gap .15s;
+}
+.article-card:hover .card-read-more { gap: .5rem; }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+.empty-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--teal-pale);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.25rem;
+  color: var(--teal);
+}
+.empty-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: .5rem;
+}
+.empty-desc { color: var(--text-mid); font-size: .95rem; }
+
+/* ===== OTHER REGIONS ===== */
+.other-regions-section {
+  padding: 5rem 0;
+  background: var(--cream-dark);
+  border-top: 1px solid var(--border);
+}
+.other-regions-inner { text-align: center; }
+.other-label {
+  display: inline-block;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: var(--teal);
+  margin-bottom: .75rem;
+}
+.other-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-bottom: 1rem;
+}
+.other-desc {
+  font-size: 1rem;
+  color: var(--text-mid);
+  line-height: 1.75;
+  max-width: 560px;
+  margin: 0 auto 2rem;
+}
+.btn-view-regions {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--teal);
+  color: var(--white);
+  font-weight: 700;
+  font-size: .9rem;
+  padding: .75rem 1.75rem;
+  border-radius: 8px;
+  transition: background .15s;
+}
+.btn-view-regions:hover { background: var(--teal-dark); }
+
+/* ===== FOOTER ===== */
+.site-footer {
+  background: #1a1f2e;
+  color: rgba(255,255,255,.7);
+  padding: 3.5rem 0 2rem;
+}
+.footer-inner {}
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 2.5rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 700px) {
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+.footer-logo   { height: 36px; width: auto; object-fit: contain; margin-bottom: .75rem; }
+.footer-tagline { font-size: .875rem; line-height: 1.6; }
+
+.footer-links-title {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  margin-bottom: .75rem;
+}
+.footer-links-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .4rem .75rem;
+}
+.footer-link {
+  font-size: .875rem;
+  color: rgba(255,255,255,.6);
+  transition: color .15s;
+}
+.footer-link:hover { color: var(--white); }
+
+.footer-social-links {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.footer-bottom { text-align: center; }
+.footer-copy   { font-size: .8rem; color: rgba(255,255,255,.35); }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: calc(var(--header-h) + 1.5rem) 1rem 2rem;
+  overflow-y: auto;
+}
+.modal-box {
+  background: var(--white);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 760px;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--cream);
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--text-mid);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+  z-index: 1;
+}
+.modal-close:hover { background: var(--border); }
+
+.modal-thumb {
+  width: 100%;
+  aspect-ratio: 16/6;
+  object-fit: cover;
+}
+.modal-thumb-placeholder {
+  width: 100%;
+  aspect-ratio: 16/6;
+  background: linear-gradient(135deg, var(--teal-dark), var(--teal-light));
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  color: rgba(255,255,255,.4);
+}
+.modal-body { padding: 2rem; }
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--text-dark);
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+.modal-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: .82rem;
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.modal-meta-item { display: flex; align-items: center; gap: .35rem; }
+.modal-text {
+  font-size: .975rem;
+  color: var(--text-mid);
+  line-height: 1.85;
+  white-space: pre-wrap;
+}
+
+/* ===== UTILITIES ===== */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/**
+ * articles.js — 記事データファイル
+ *
+ * 記事を追加・編集するには、このファイルの ARTICLES 配列を編集してください。
+ *
+ * 各記事のフィールド：
+ *   id          : 一意の番号（重複不可）
+ *   title       : 記事タイトル
+ *   excerpt     : 一覧ページに表示される短い説明文（100〜150字程度）
+ *   body        : 記事本文（改行は \n で表現）
+ *   author      : 著者名
+ *   date        : 投稿日（YYYY-MM-DD 形式）
+ *   thumbnailUrl: サムネイル画像のURL（不要な場合は null）
+ */
+
+const ARTICLES = [
+  // ---- サンプル記事 1 ----
+  {
+    id: 1,
+    title: "A Weekend in Yanaka: Tokyo's Last Old Neighbourhood",
+    excerpt: "Yanaka feels like a village frozen in time. Narrow lanes, wooden temples, and a cat on every corner — this is the Tokyo most tourists never find.",
+    body: "Yanaka feels like a village frozen in time.\n\nTucked between Nippori and Nezu stations, this pocket of old Shitamachi survived the 1923 earthquake, the wartime firebombing, and the postwar redevelopment that erased so much of Tokyo's past. Walking its narrow lanes on a Saturday morning, you half-expect to round a corner and find yourself in the 1950s.\n\nThe main artery, Yanaka Ginza, is a covered shopping street barely 170 metres long. Tofu shops, sembei sellers, a fishmonger with a hand-painted sign — the kind of places that have been here for three generations and show no interest in Instagram aesthetics. A tabby cat sleeps in a patch of sunlight outside the butcher.\n\nBeyond the shopping street, the neighbourhood opens into a maze of temple grounds and wooden houses. Yanaka Cemetery, which doubles as a public park, is famous for cherry blossoms in spring, but in autumn the ginkgo trees turn the paths gold. Old graves of Meiji-era artists and politicians stand beside modest family plots, all equally weathered.\n\nFor lunch, duck into any of the tiny restaurants along the side streets. A bowl of handmade soba, a plate of grilled fish — nothing fancy, nothing expensive. The neighbourhood has resisted the gentrification that swallowed Shimokitazawa and Koenji, partly because the residents simply don't want it.\n\nYanaka is the Tokyo that Tokyoites quietly love and rarely talk about to outsiders. Come on a weekday if you can.",
+    author: "Keiko M.",
+    date: "2025-11-14",
+    thumbnailUrl: null
+  },
+  // ---- サンプル記事 2 ----
+  {
+    id: 2,
+    title: "Kamakura in the Rain: Why the Crowds Disappear",
+    excerpt: "Everyone visits Kamakura on sunny weekends. Go on a rainy Tuesday instead and you'll have the Great Buddha almost to yourself.",
+    body: "Everyone visits Kamakura on sunny weekends. The trains from Tokyo are packed, the paths to the Great Buddha are lined three-deep, and the matcha soft-serve queues stretch around the block.\n\nGo on a rainy Tuesday instead.\n\nI arrived at Kita-Kamakura station on a grey November morning, the kind of day when the mountains behind the town disappear into low cloud. The platform was nearly empty. By the time I reached Engaku-ji temple, five minutes' walk from the station, I had the moss-covered stone lanterns almost to myself.\n\nRain does something to old temples. The cypress bark on the rooftops darkens to near-black. The gravel paths turn silver. The smell of wet cedar and incense mixes in a way that feels ancient. A monk in grey robes crossed the courtyard without looking up.\n\nAt Kotoku-in, the Great Buddha sat in the drizzle as he has for seven centuries, his bronze patina deepened by the moisture. No crowd, no selfie sticks, no tour-guide microphones. Just the sound of rain on bronze and the distant crows.\n\nFor lunch I found a small soba restaurant near Hase station, the kind with a handwritten menu and no English. The owner, a woman in her seventies, brought a pot of green tea without being asked. The tempura soba was ¥950.\n\nKamakura in the rain is a different city. Slower, quieter, more itself. Pack a good umbrella and go.",
+    author: "Taro H.",
+    date: "2025-12-03",
+    thumbnailUrl: null
+  }
+  // ---- 新しい記事はここに追加してください ----
+  // {
+  //   id: 3,
+  //   title: "記事タイトル",
+  //   excerpt: "短い説明文",
+  //   body: "記事本文",
+  //   author: "著者名",
+  //   date: "2026-01-01",
+  //   thumbnailUrl: null
+  // }
+];
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kanto Region – Localism.blog</title>
+  <meta name="description" content="Stories from Kanto by the locals. Tokyo, Kanagawa, Saitama, Chiba, Ibaraki, Tochigi, Gunma — honest voices from the people who actually live here." />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <!-- Logo -->
+      <a href="https://www.chat-communityjapan.com/" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img
+          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663470492773/QyfzTFrHCq4wGweKzs83UD/localism-logo_b2ded65c.png"
+          alt="Localism.blog by Chat Community"
+          class="logo-img"
+        />
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav" aria-label="Regions">
+        <a href="/" class="nav-link nav-link--active">Kanto</a>
+        <a href="https://www.chat-communityjapan.com/kansai"   target="_blank" rel="noopener" class="nav-link">Kansai</a>
+        <a href="https://www.chat-communityjapan.com/kyushu"   target="_blank" rel="noopener" class="nav-link">Kyushu</a>
+        <a href="https://www.chat-communityjapan.com/tohoku"   target="_blank" rel="noopener" class="nav-link">Tohoku</a>
+        <a href="https://www.chat-communityjapan.com/hokkaido" target="_blank" rel="noopener" class="nav-link">Hokkaido</a>
+        <a href="https://www.chat-communityjapan.com/chubu"    target="_blank" rel="noopener" class="nav-link">Chubu</a>
+        <a href="https://www.chat-communityjapan.com/hokuriku" target="_blank" rel="noopener" class="nav-link">Hokuriku</a>
+        <a href="https://www.chat-communityjapan.com/shikoku"  target="_blank" rel="noopener" class="nav-link">Shikoku</a>
+        <a href="https://www.chat-communityjapan.com/"         target="_blank" rel="noopener" class="nav-link">Other</a>
+      </nav>
+
+      <!-- Become Editor button -->
+      <button class="btn-become-editor desktop-only" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        Become Editor
+      </button>
+
+      <!-- Hamburger -->
+      <button class="hamburger mobile-only" id="hamburger" aria-label="Open menu" type="button">
+        <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+      <div class="container">
+        <div class="mobile-nav-grid">
+          <a href="/" class="mobile-nav-link mobile-nav-link--active">Kanto</a>
+          <a href="https://www.chat-communityjapan.com/kansai"   target="_blank" rel="noopener" class="mobile-nav-link">Kansai</a>
+          <a href="https://www.chat-communityjapan.com/kyushu"   target="_blank" rel="noopener" class="mobile-nav-link">Kyushu</a>
+          <a href="https://www.chat-communityjapan.com/tohoku"   target="_blank" rel="noopener" class="mobile-nav-link">Tohoku</a>
+          <a href="https://www.chat-communityjapan.com/hokkaido" target="_blank" rel="noopener" class="mobile-nav-link">Hokkaido</a>
+          <a href="https://www.chat-communityjapan.com/chubu"    target="_blank" rel="noopener" class="mobile-nav-link">Chubu</a>
+          <a href="https://www.chat-communityjapan.com/hokuriku" target="_blank" rel="noopener" class="mobile-nav-link">Hokuriku</a>
+          <a href="https://www.chat-communityjapan.com/shikoku"  target="_blank" rel="noopener" class="mobile-nav-link">Shikoku</a>
+          <a href="https://www.chat-communityjapan.com/"         target="_blank" rel="noopener" class="mobile-nav-link">Other</a>
+        </div>
+        <hr class="mobile-divider" />
+        <button class="btn-become-editor btn-become-editor--full" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          Become Editor
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" aria-label="Kanto Region">
+    <div class="hero-bg-pattern" aria-hidden="true"></div>
+    <div class="container hero-content">
+      <span class="region-badge">Kanto Region</span>
+      <h1 class="hero-title">
+        Stories from <em>Kanto</em><br />by the Locals
+      </h1>
+      <p class="hero-desc">
+        Tokyo · Kanagawa · Saitama · Chiba · Ibaraki · Tochigi · Gunma<br />
+        Japan's most populous region — honest voices from the people who actually live here.
+      </p>
+      <a href="#articles" class="btn-read-stories">Read the Stories ↓</a>
+    </div>
+  </section>
+
+  <!-- ===== ARTICLES ===== -->
+  <section class="articles-section" id="articles">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">ARTICLES</p>
+        <h2 class="section-title">Latest from Kanto</h2>
+        <p class="section-desc">Stories, secrets, and honest voices from the people who actually live here.</p>
+      </div>
+
+      <!-- Article grid — populated by articles.js -->
+      <div class="articles-grid" id="articles-grid">
+        <!-- JS will inject cards here -->
+      </div>
+
+      <!-- Empty state (shown when no articles) -->
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="empty-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <h3 class="empty-title">No articles yet</h3>
+        <p class="empty-desc">Be the first to share a story from Kanto.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== OTHER REGIONS ===== -->
+  <section class="other-regions-section">
+    <div class="container other-regions-inner">
+      <span class="other-label">EXPLORE JAPAN</span>
+      <h2 class="other-title">Articles on Other Regions</h2>
+      <p class="other-desc">
+        Localism.blog covers communities across Japan — from Hokkaido to Kyushu.<br />
+        Discover stories from locals in every corner of the country.
+      </p>
+      <a
+        href="https://www.chat-communityjapan.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-view-regions"
+      >
+        View All Regions →
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="https://www.chat-communityjapan.com/" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663470492773/QyfzTFrHCq4wGweKzs83UD/localism-logo_b2ded65c.png"
+              alt="Localism.blog by Chat Community"
+              class="footer-logo"
+            />
+          </a>
+          <p class="footer-tagline">Honest voices from the people who actually live here.</p>
+        </div>
+        <div class="footer-links">
+          <p class="footer-links-title">Regions</p>
+          <div class="footer-links-grid">
+            <a href="/" class="footer-link">Kanto</a>
+            <a href="https://www.chat-communityjapan.com/kansai"   target="_blank" rel="noopener" class="footer-link">Kansai</a>
+            <a href="https://www.chat-communityjapan.com/kyushu"   target="_blank" rel="noopener" class="footer-link">Kyushu</a>
+            <a href="https://www.chat-communityjapan.com/tohoku"   target="_blank" rel="noopener" class="footer-link">Tohoku</a>
+            <a href="https://www.chat-communityjapan.com/hokkaido" target="_blank" rel="noopener" class="footer-link">Hokkaido</a>
+            <a href="https://www.chat-communityjapan.com/chubu"    target="_blank" rel="noopener" class="footer-link">Chubu</a>
+            <a href="https://www.chat-communityjapan.com/hokuriku" target="_blank" rel="noopener" class="footer-link">Hokuriku</a>
+            <a href="https://www.chat-communityjapan.com/shikoku"  target="_blank" rel="noopener" class="footer-link">Shikoku</a>
+          </div>
+        </div>
+        <div class="footer-social">
+          <p class="footer-links-title">Connect</p>
+          <div class="footer-social-links">
+            <a href="https://www.chat-communityjapan.com/" target="_blank" rel="noopener" class="footer-link">Chat Community</a>
+            <a href="https://www.instagram.com/chatcommunityjapan/" target="_blank" rel="noopener" class="footer-link">Instagram</a>
+            <a href="https://www.chat-communityjapan.com/contact" target="_blank" rel="noopener" class="footer-link">Contact</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© <span id="year"></span> Localism.blog by Chat Community. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Article detail modal -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display:none">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="articles.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
