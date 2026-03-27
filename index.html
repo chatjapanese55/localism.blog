@@ -3,427 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- ===== PRIMARY META TAGS ===== -->
-  <title>Localism.blog – Hear the Real Japan from the Locals</title>
-  <meta name="description" content="A Japan travel blog built on local voices. Honest stories, hidden gems, and real perspectives from all 9 regions — Kanto, Kansai, Kyushu, Tohoku, Hokkaido, Chubu, Hokuriku, Shikoku, and more." />
-  <meta name="keywords" content="Japan travel blog, local Japan, real Japan, Kanto travel, Kansai travel, Kyushu travel, Tohoku travel, Hokkaido travel, hidden gems Japan, local voices Japan" />
-  <meta name="author" content="Chat Community" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://localism.blog/" />
-
-  <!-- ===== OPEN GRAPH (Facebook / LINE / general) ===== -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://localism.blog/" />
-  <meta property="og:title" content="Localism.blog – Hear the Real Japan from the Locals" />
-  <meta property="og:description" content="A Japan travel blog built on local voices. Honest stories, hidden gems, and real perspectives from all 9 regions of Japan." />
-  <meta property="og:image" content="https://localism.blog/og-image.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:site_name" content="Localism.blog" />
-  <meta property="og:locale" content="en_US" />
-
-  <!-- ===== TWITTER CARD ===== -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@chat_community.japan" />
-  <meta name="twitter:title" content="Localism.blog – Hear the Real Japan from the Locals" />
-  <meta name="twitter:description" content="A Japan travel blog built on local voices. Honest stories, hidden gems, and real perspectives from all 9 regions of Japan." />
-  <meta name="twitter:image" content="https://localism.blog/og-image.jpg" />
-
-  <!-- ===== STRUCTURED DATA: WebSite ===== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Localism.blog",
-    "url": "https://localism.blog/",
-    "description": "A Japan travel blog built on local voices. Honest stories and real perspectives from all 9 regions of Japan.",
-    "publisher": {
-      "@type": "Organization",
-      "name": "Chat Community",
-      "url": "https://www.chat-japanese.com/community/index.html",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://localism.blog/logo.png"
-      },
-      "sameAs": [
-        "https://www.instagram.com/chat_community.japan"
-      ]
-    },
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://localism.blog/search?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
-  }
-  </script>
-
-  <!-- ===== STRUCTURED DATA: Blog ===== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Blog",
-    "name": "Localism.blog",
-    "url": "https://localism.blog/",
-    "description": "Hear the Real Japan from the Locals — stories, secrets, and honest voices from people who actually live there.",
-    "inLanguage": "en",
-    "author": {
-      "@type": "Organization",
-      "name": "Chat Community",
-      "url": "https://www.chat-japanese.com/community/index.html"
-    },
-    "about": [
-      { "@type": "Thing", "name": "Japan Travel" },
-      { "@type": "Thing", "name": "Local Culture" },
-      { "@type": "Place", "name": "Japan" }
-    ]
-  }
-  </script>
-
-  <!-- ===== STRUCTURED DATA: BreadcrumbList ===== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://localism.blog/"
-      }
-    ]
-  }
-  </script>
-
-  <!-- ===== STRUCTURED DATA: ItemList (Regions) ===== -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "Japan Travel Blog – Articles by Region",
-    "description": "Browse Japan travel stories organized by region: Kanto, Kansai, Kyushu, Tohoku, Hokkaido, Chubu, Hokuriku, Shikoku, and more.",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Kanto",    "url": "https://localism.blog/kanto/" },
-      { "@type": "ListItem", "position": 2, "name": "Kansai",   "url": "https://localism.blog/kansai/" },
-      { "@type": "ListItem", "position": 3, "name": "Kyushu",   "url": "https://localism.blog/kyushu/" },
-      { "@type": "ListItem", "position": 4, "name": "Tohoku",   "url": "https://localism.blog/tohoku/" },
-      { "@type": "ListItem", "position": 5, "name": "Hokkaido", "url": "https://localism.blog/hokkaido/" },
-      { "@type": "ListItem", "position": 6, "name": "Chubu",    "url": "https://localism.blog/chubu/" },
-      { "@type": "ListItem", "position": 7, "name": "Hokuriku", "url": "https://localism.blog/hokuriku/" },
-      { "@type": "ListItem", "position": 8, "name": "Shikoku",  "url": "https://localism.blog/shikoku/" },
-      { "@type": "ListItem", "position": 9, "name": "Other",    "url": "https://localism.blog/other/" }
-    ]
-  }
-  </script>
-
-  <!-- ===== FONTS (display=swap for performance) ===== -->
+  <title>Kanto Region – Localism.blog</title>
+  <meta name="description" content="Stories from Kanto by the locals. Tokyo, Kanagawa, Saitama, Chiba, Ibaraki, Tochigi, Gunma — honest voices from the people who actually live here." />
+  <link rel="icon" type="image/png" href="favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-
-  <!-- ===== FAVICON ===== -->
-  <link rel="icon" type="image/x-icon" href="favicon.ico" />
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-  <link rel="manifest" href="site.webmanifest" />
-
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- ===== HEADER / NAVIGATION ===== -->
-  <header class="site-header" id="site-header" role="banner">
-    <div class="header-inner">
-      <a href="/" class="logo-link" aria-label="Localism.blog – Home">
-        <img src="logo.png" alt="Localism.blog by Chat Community" class="logo-img" width="160" height="48" />
+  <!-- ===== HEADER ===== -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <!-- Logo -->
+      <a href="https://www.chat-communityjapan.com/" target="_blank" rel="noopener noreferrer" class="logo-link">
+        <img
+          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663470492773/QyfzTFrHCq4wGweKzs83UD/localism-logo_b2ded65c.png"
+          alt="Localism.blog by Chat Community"
+          class="logo-img"
+        />
       </a>
-      <button class="nav-toggle" id="nav-toggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="main-nav">
-        <span></span><span></span><span></span>
-      </button>
-      <nav class="main-nav" id="main-nav" role="navigation" aria-label="Regional navigation">
-        <ul class="nav-list">
-          <li><a href="/kanto/"    class="nav-link">Kanto</a></li>
-          <li><a href="/kansai/"   class="nav-link">Kansai</a></li>
-          <li><a href="/kyushu/"   class="nav-link">Kyushu</a></li>
-          <li><a href="/tohoku/"   class="nav-link">Tohoku</a></li>
-          <li><a href="/hokkaido/" class="nav-link">Hokkaido</a></li>
-          <li><a href="/chubu/"    class="nav-link">Chubu</a></li>
-          <li><a href="/hokuriku/" class="nav-link">Hokuriku</a></li>
-          <li><a href="/shikoku/"  class="nav-link">Shikoku</a></li>
-          <li><a href="/other/"    class="nav-link">Other</a></li>
-        </ul>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav" aria-label="Regions">
+        <a href="/" class="nav-link nav-link--active">Kanto</a>
+        <a href="https://www.chat-communityjapan.com/kansai"   target="_blank" rel="noopener" class="nav-link">Kansai</a>
+        <a href="https://www.chat-communityjapan.com/kyushu"   target="_blank" rel="noopener" class="nav-link">Kyushu</a>
+        <a href="https://www.chat-communityjapan.com/tohoku"   target="_blank" rel="noopener" class="nav-link">Tohoku</a>
+        <a href="https://www.chat-communityjapan.com/hokkaido" target="_blank" rel="noopener" class="nav-link">Hokkaido</a>
+        <a href="https://www.chat-communityjapan.com/chubu"    target="_blank" rel="noopener" class="nav-link">Chubu</a>
+        <a href="https://www.chat-communityjapan.com/hokuriku" target="_blank" rel="noopener" class="nav-link">Hokuriku</a>
+        <a href="https://www.chat-communityjapan.com/shikoku"  target="_blank" rel="noopener" class="nav-link">Shikoku</a>
+        <a href="https://www.chat-communityjapan.com/"         target="_blank" rel="noopener" class="nav-link">Other</a>
       </nav>
+
+      <!-- Become Editor button -->
+      <button class="btn-become-editor desktop-only" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        Become Editor
+      </button>
+
+      <!-- Hamburger -->
+      <button class="hamburger mobile-only" id="hamburger" aria-label="Open menu" type="button">
+        <svg id="icon-menu" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <svg id="icon-close" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+      <div class="container">
+        <div class="mobile-nav-grid">
+          <a href="/" class="mobile-nav-link mobile-nav-link--active">Kanto</a>
+          <a href="https://www.chat-communityjapan.com/kansai"   target="_blank" rel="noopener" class="mobile-nav-link">Kansai</a>
+          <a href="https://www.chat-communityjapan.com/kyushu"   target="_blank" rel="noopener" class="mobile-nav-link">Kyushu</a>
+          <a href="https://www.chat-communityjapan.com/tohoku"   target="_blank" rel="noopener" class="mobile-nav-link">Tohoku</a>
+          <a href="https://www.chat-communityjapan.com/hokkaido" target="_blank" rel="noopener" class="mobile-nav-link">Hokkaido</a>
+          <a href="https://www.chat-communityjapan.com/chubu"    target="_blank" rel="noopener" class="mobile-nav-link">Chubu</a>
+          <a href="https://www.chat-communityjapan.com/hokuriku" target="_blank" rel="noopener" class="mobile-nav-link">Hokuriku</a>
+          <a href="https://www.chat-communityjapan.com/shikoku"  target="_blank" rel="noopener" class="mobile-nav-link">Shikoku</a>
+          <a href="https://www.chat-communityjapan.com/"         target="_blank" rel="noopener" class="mobile-nav-link">Other</a>
+        </div>
+        <hr class="mobile-divider" />
+        <button class="btn-become-editor btn-become-editor--full" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+          Become Editor
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- ===== HERO SECTION ===== -->
-  <section class="hero" id="hero" aria-label="Hero – Hear the Real Japan from the Locals">
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <span class="hero-badge">Japan Travel Blog</span>
+  <!-- ===== HERO ===== -->
+  <section class="hero" aria-label="Kanto Region">
+    <div class="hero-bg-pattern" aria-hidden="true"></div>
+    <div class="container hero-content">
+      <span class="region-badge">Kanto Region</span>
       <h1 class="hero-title">
-        Hear the <em>Real Japan</em><br />from the Locals
+        Stories from <em>Kanto</em><br />by the Locals
       </h1>
-      <p class="hero-subtitle">
-        Beyond the guidebooks — stories, secrets, and honest voices<br />
-        from the people who actually live there. Nine regions. One truth.
+      <p class="hero-desc">
+        Tokyo · Kanagawa · Saitama · Chiba · Ibaraki · Tochigi · Gunma<br />
+        Japan's most populous region — honest voices from the people who actually live here.
       </p>
-      <a href="#toc" class="hero-btn">Read the Stories &darr;</a>
-    </div>
-    <div class="hero-scroll-hint" aria-hidden="true">
-      <span>Scroll</span>
-      <div class="scroll-line"></div>
+      <a href="#articles" class="btn-read-stories">Read the Stories ↓</a>
     </div>
   </section>
 
-  <!-- ===== TABLE OF CONTENTS ===== -->
-  <main id="main-content">
-  <section class="toc-section" id="toc" aria-labelledby="toc-heading">
+  <!-- ===== ARTICLES ===== -->
+  <section class="articles-section" id="articles">
     <div class="container">
-      <div class="section-label">CONTENTS</div>
-      <h2 class="section-title" id="toc-heading">Articles by Region</h2>
-      <p class="section-desc">Pick a region and go hear what the locals have to say.</p>
+      <div class="section-header">
+        <p class="section-label">ARTICLES</p>
+        <h2 class="section-title">Latest from Kanto</h2>
+        <p class="section-desc">Stories, secrets, and honest voices from the people who actually live here.</p>
+      </div>
 
-      <div class="toc-grid" role="list">
+      <!-- Article grid — populated by articles.js -->
+      <div class="articles-grid" id="articles-grid">
+        <!-- JS will inject cards here -->
+      </div>
 
-        <!-- Kanto -->
-        <article class="toc-card" id="kanto" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Kanto</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Kanto Region</h3>
-            <p class="card-desc" itemprop="description">Tokyo · Kanagawa · Saitama · Chiba · Ibaraki · Tochigi · Gunma</p>
-            <p class="card-info">Japan's most populous region, home to the buzzing capital Tokyo and a rich mix of urban energy, coastal towns, and mountain retreats — all within easy reach.</p>
-            <a href="/kanto/" class="card-btn" aria-label="See all Kanto articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Kansai -->
-        <article class="toc-card" id="kansai" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Kansai</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Kansai Region</h3>
-            <p class="card-desc" itemprop="description">Osaka · Kyoto · Hyogo · Nara · Shiga · Wakayama</p>
-            <p class="card-info">The cultural heartland of Japan, where ancient temples and imperial history meet Osaka's vibrant street food scene and the laid-back warmth of Kansai people.</p>
-            <a href="/kansai/" class="card-btn" aria-label="See all Kansai articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Kyushu -->
-        <article class="toc-card" id="kyushu" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Kyushu</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Kyushu Region</h3>
-            <p class="card-desc" itemprop="description">Fukuoka · Saga · Nagasaki · Kumamoto · Oita · Miyazaki · Kagoshima</p>
-            <p class="card-info">A land of active volcanoes, steaming hot springs, and bold flavors — Kyushu blends dramatic nature with a deep history of international exchange and local pride.</p>
-            <a href="/kyushu/" class="card-btn" aria-label="See all Kyushu articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Tohoku -->
-        <article class="toc-card" id="tohoku" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Tohoku</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Tohoku Region</h3>
-            <p class="card-desc" itemprop="description">Aomori · Iwate · Miyagi · Akita · Yamagata · Fukushima</p>
-            <p class="card-info">Often overlooked by tourists, Tohoku rewards those who venture north with spectacular festivals, untouched nature, and communities with a quiet, resilient spirit.</p>
-            <a href="/tohoku/" class="card-btn" aria-label="See all Tohoku articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Hokkaido -->
-        <article class="toc-card" id="hokkaido" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Hokkaido</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Hokkaido Region</h3>
-            <p class="card-desc" itemprop="description">Sapporo · Hakodate · Asahikawa · Kushiro · Obihiro · Wakkanai &amp; more</p>
-            <p class="card-info">Japan's northernmost island is a world apart — vast open landscapes, world-class seafood, powder snow, and a frontier spirit shaped by both Ainu heritage and settler history.</p>
-            <a href="/hokkaido/" class="card-btn" aria-label="See all Hokkaido articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Chubu -->
-        <article class="toc-card" id="chubu" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Chubu</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Chubu Region</h3>
-            <p class="card-desc" itemprop="description">Aichi · Shizuoka · Gifu · Nagano · Yamanashi · Niigata &amp; more</p>
-            <p class="card-info">Stretching from Mt. Fuji to the Japan Alps, Chubu offers everything from Nagoya's unique food culture and Shirakawa-go's thatched villages to Niigata's legendary rice paddies.</p>
-            <a href="/chubu/" class="card-btn" aria-label="See all Chubu articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Hokuriku -->
-        <article class="toc-card" id="hokuriku" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Hokuriku</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Hokuriku Region</h3>
-            <p class="card-desc" itemprop="description">Ishikawa · Toyama · Fukui</p>
-            <p class="card-info">Facing the Sea of Japan, Hokuriku is a region of refined craftsmanship, fresh seafood, and heavy snowfall — anchored by Kanazawa, often called "Little Kyoto."</p>
-            <a href="/hokuriku/" class="card-btn" aria-label="See all Hokuriku articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Shikoku -->
-        <article class="toc-card" id="shikoku" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Shikoku</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Shikoku Region</h3>
-            <p class="card-desc" itemprop="description">Tokushima · Kagawa · Ehime · Kochi</p>
-            <p class="card-info">Japan's smallest main island is defined by the 88-temple pilgrimage, the art islands of the Seto Inland Sea, and a warm, unhurried way of life that feels like a step back in time.</p>
-            <a href="/shikoku/" class="card-btn" aria-label="See all Shikoku articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-        <!-- Other -->
-        <article class="toc-card" id="other" role="listitem" itemscope itemtype="https://schema.org/Place">
-          <div class="card-region-tag">Other</div>
-          <div class="card-body">
-            <h3 class="card-title" itemprop="name">Other Areas</h3>
-            <p class="card-desc" itemprop="description">Okinawa · Remote Islands · Japanese Living Abroad &amp; more</p>
-            <p class="card-info">From the tropical reefs of Okinawa and the remote Ogasawara Islands to the perspectives of Japanese people living overseas — Japan's story doesn't end at the main islands.</p>
-            <a href="/other/" class="card-btn" aria-label="See all Other area articles">See all articles &rarr;</a>
-          </div>
-        </article>
-
-      </div><!-- /.toc-grid -->
-    </div><!-- /.container -->
-  </section>
-
-  <!-- ===== ABOUT SECTION ===== -->
-  <section class="about-section" aria-labelledby="about-heading" itemscope itemtype="https://schema.org/Organization">
-    <div class="container">
-      <div class="about-grid">
-        <div class="about-text">
-          <div class="section-label">ABOUT THIS BLOG</div>
-          <h2 class="section-title left" id="about-heading">About This Blog</h2>
-          <p itemprop="description">
-            <strong>Localism.blog</strong> is a travel blog that documents the honest voices of locals encountered
-            across Japan. Rather than the polished surface of tourism, we capture what people genuinely feel,
-            what they hold dear, and what they want travelers to know.
-          </p>
-          <p>
-            We also aim to create content that lets students at our language school, <strong>Chat Japanese</strong>
-            experience real Japanese language and culture as it is actually spoken and lived.
-          </p>
-          <a href="https://www.chat-japanese.com/community/index.html" target="_blank" rel="noopener" class="about-btn" itemprop="url">
-            Visit Chat Community &rarr;
-          </a>
+      <!-- Empty state (shown when no articles) -->
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="empty-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         </div>
-        <div class="about-visual" aria-hidden="true">
-          <div class="about-card-stack">
-            <div class="about-card ac1">
-              <span class="ac-icon">🗾</span>
-              <span class="ac-text">covering all 47 prefectures</span>
-            </div>
-            <div class="about-card ac2">
-              <span class="ac-icon">🎙️</span>
-              <span class="ac-text">Amplifying local voices</span>
-            </div>
-            <div class="about-card ac3">
-              <span class="ac-icon">📖</span>
-              <span class="ac-text">Authentic language &amp; culture</span>
-            </div>
-          </div>
-        </div>
+        <h3 class="empty-title">No articles yet</h3>
+        <p class="empty-desc">Be the first to share a story from Kanto.</p>
       </div>
     </div>
   </section>
 
-  <!-- ===== INSTAGRAM SECTION ===== -->
-  <section class="instagram-section" aria-labelledby="instagram-heading">
-    <div class="container">
-      <div class="instagram-inner">
-        <div class="instagram-text">
-          <div class="section-label">FOLLOW ALONG</div>
-          <h2 class="section-title left" id="instagram-heading">Stories Beyond the Page</h2>
-          <p>
-            The journey doesn't stop here. We share anything you need to know to maximize your experience in Japan. While we provide articles on local places, the information on the Instagram is more touristy and instagramatic!
-          </p>
-          <a href="https://www.instagram.com/chat_community.japan" target="_blank" rel="noopener" class="instagram-btn" aria-label="Follow @chat_community.japan on Instagram">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            @chat_community.japan
-          </a>
-        </div>
-        <div class="instagram-visual" aria-hidden="true">
-          <div class="insta-mock">
-            <div class="insta-header">
-              <div class="insta-avatar">LC</div>
-              <div class="insta-handle">
-                <strong>@chat_community.japan</strong>
-                <span>Chat Community &middot; Japan</span>
-              </div>
-            </div>
-            <div class="insta-grid">
-              <div class="insta-tile t1"></div>
-              <div class="insta-tile t2"></div>
-              <div class="insta-tile t3"></div>
-              <div class="insta-tile t4"></div>
-              <div class="insta-tile t5"></div>
-              <div class="insta-tile t6"></div>
-            </div>
-            <a href="https://www.instagram.com/chat_community.japan" target="_blank" rel="noopener" class="insta-follow-btn">Follow on Instagram</a>
-          </div>
-        </div>
-      </div>
+  <!-- ===== OTHER REGIONS ===== -->
+  <section class="other-regions-section">
+    <div class="container other-regions-inner">
+      <span class="other-label">EXPLORE JAPAN</span>
+      <h2 class="other-title">Articles on Other Regions</h2>
+      <p class="other-desc">
+        Localism.blog covers communities across Japan — from Hokkaido to Kyushu.<br />
+        Discover stories from locals in every corner of the country.
+      </p>
+      <a
+        href="https://www.chat-communityjapan.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-view-regions"
+      >
+        View All Regions →
+      </a>
     </div>
   </section>
-  </main>
 
   <!-- ===== FOOTER ===== -->
-  <footer class="site-footer" role="contentinfo" itemscope itemtype="https://schema.org/WPFooter">
-    <div class="container">
-      <div class="footer-grid">
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
         <div class="footer-brand">
-          <img src="logo.png" alt="Localism.blog" class="footer-logo" width="140" height="42" loading="lazy" />
-          <p class="footer-tagline">Hear the Real Japan from the Locals</p>
-          <p class="footer-copy">by <a href="https://www.chat-japanese.com/community/index.html" target="_blank" rel="noopener">Chat Community</a></p>
+          <a href="https://www.chat-communityjapan.com/" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663470492773/QyfzTFrHCq4wGweKzs83UD/localism-logo_b2ded65c.png"
+              alt="Localism.blog by Chat Community"
+              class="footer-logo"
+            />
+          </a>
+          <p class="footer-tagline">Honest voices from the people who actually live here.</p>
         </div>
-        <nav class="footer-nav" aria-label="Regional links">
-          <h4>Regions</h4>
-          <ul>
-            <li><a href="/kanto/">Kanto</a></li>
-            <li><a href="/kansai/">Kansai</a></li>
-            <li><a href="/kyushu/">Kyushu</a></li>
-            <li><a href="/tohoku/">Tohoku</a></li>
-            <li><a href="/hokkaido/">Hokkaido</a></li>
-          </ul>
-        </nav>
-        <nav class="footer-nav" aria-label="More regional links">
-          <h4>&nbsp;</h4>
-          <ul>
-            <li><a href="/chubu/">Chubu</a></li>
-            <li><a href="/hokuriku/">Hokuriku</a></li>
-            <li><a href="/shikoku/">Shikoku</a></li>
-            <li><a href="/other/">Other</a></li>
-          </ul>
-        </nav>
-        <nav class="footer-nav" aria-label="External links">
-          <h4>Links</h4>
-          <ul>
-            <li><a href="https://www.chat-japanese.com/community/index.html" target="_blank" rel="noopener">Chat Community</a></li>
-            <li>
-              <a href="https://www.instagram.com/chat_community.japan" target="_blank" rel="noopener" aria-label="Instagram @chat_community.japan">
-                Instagram
-              </a>
-            </li>
-            <li><a href="mailto:chat-japanese55@gmail.com">Contact</a></li>
-          </ul>
-        </nav>
+        <div class="footer-links">
+          <p class="footer-links-title">Regions</p>
+          <div class="footer-links-grid">
+            <a href="/" class="footer-link">Kanto</a>
+            <a href="https://www.chat-communityjapan.com/kansai"   target="_blank" rel="noopener" class="footer-link">Kansai</a>
+            <a href="https://www.chat-communityjapan.com/kyushu"   target="_blank" rel="noopener" class="footer-link">Kyushu</a>
+            <a href="https://www.chat-communityjapan.com/tohoku"   target="_blank" rel="noopener" class="footer-link">Tohoku</a>
+            <a href="https://www.chat-communityjapan.com/hokkaido" target="_blank" rel="noopener" class="footer-link">Hokkaido</a>
+            <a href="https://www.chat-communityjapan.com/chubu"    target="_blank" rel="noopener" class="footer-link">Chubu</a>
+            <a href="https://www.chat-communityjapan.com/hokuriku" target="_blank" rel="noopener" class="footer-link">Hokuriku</a>
+            <a href="https://www.chat-communityjapan.com/shikoku"  target="_blank" rel="noopener" class="footer-link">Shikoku</a>
+          </div>
+        </div>
+        <div class="footer-social">
+          <p class="footer-links-title">Connect</p>
+          <div class="footer-social-links">
+            <a href="https://www.chat-communityjapan.com/" target="_blank" rel="noopener" class="footer-link">Chat Community</a>
+            <a href="https://www.instagram.com/chatcommunityjapan/" target="_blank" rel="noopener" class="footer-link">Instagram</a>
+            <a href="https://www.chat-communityjapan.com/contact" target="_blank" rel="noopener" class="footer-link">Contact</a>
+          </div>
+        </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Localism.blog by Chat Community. All rights reserved.</p>
+        <p class="footer-copy">© <span id="year"></span> Localism.blog by Chat Community. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
-  <!-- ===== SKIP TO MAIN CONTENT (accessibility) ===== -->
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <!-- Article detail modal -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display:none">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
 
-  <script src="script.js" defer></script>
+  <script src="articles.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
