@@ -1,0 +1,173 @@
+/* main.js — Kanto Blog static page logic */
+
+(function () {
+  "use strict";
+
+  // ── Helpers ──────────────────────────────────────────────────────────────
+
+  function formatDate(dateStr) {
+    const d = new Date(dateStr + "T00:00:00");
+    return d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // ── Copyright year ────────────────────────────────────────────────────────
+
+  var yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // ── Hamburger menu ────────────────────────────────────────────────────────
+
+  var hamburger = document.getElementById("hamburger");
+  var drawer    = document.getElementById("mobile-drawer");
+  var iconMenu  = document.getElementById("icon-menu");
+  var iconClose = document.getElementById("icon-close");
+
+  function openDrawer() {
+    drawer.classList.add("is-open");
+    drawer.setAttribute("aria-hidden", "false");
+    iconMenu.style.display  = "none";
+    iconClose.style.display = "block";
+    hamburger.setAttribute("aria-label", "Close menu");
+  }
+
+  function closeDrawer() {
+    drawer.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+    iconMenu.style.display  = "block";
+    iconClose.style.display = "none";
+    hamburger.setAttribute("aria-label", "Open menu");
+  }
+
+  if (hamburger && drawer) {
+    hamburger.addEventListener("click", function (e) {
+      e.stopPropagation();
+      drawer.classList.contains("is-open") ? closeDrawer() : openDrawer();
+    });
+
+    document.addEventListener("click", function (e) {
+      if (drawer.classList.contains("is-open") && !drawer.contains(e.target) && e.target !== hamburger) {
+        closeDrawer();
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") closeDrawer();
+    });
+  }
+
+  // ── Article cards ─────────────────────────────────────────────────────────
+
+  var grid       = document.getElementById("articles-grid");
+  var emptyState = document.getElementById("empty-state");
+
+  // ARTICLES is defined in articles.js (loaded before this script)
+  var articles = (typeof ARTICLES !== "undefined" && Array.isArray(ARTICLES)) ? ARTICLES : [];
+
+  // Sort newest first
+  articles = articles.slice().sort(function (a, b) {
+    return new Date(b.date) - new Date(a.date);
+  });
+
+  if (articles.length === 0) {
+    if (emptyState) emptyState.style.display = "block";
+  } else {
+    if (emptyState) emptyState.style.display = "none";
+
+    articles.forEach(function (article) {
+      var card = document.createElement("article");
+      card.className = "article-card";
+      card.setAttribute("role", "button");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", "Read article: " + escHtml(article.title));
+
+      var thumbHtml = article.thumbnailUrl
+        ? '<div class="card-thumb"><img src="' + escHtml(article.thumbnailUrl) + '" alt="' + escHtml(article.title) + '" loading="lazy" /></div>'
+        : '<div class="card-thumb"><div class="card-thumb-placeholder">Kanto</div></div>';
+
+      card.innerHTML =
+        thumbHtml +
+        '<div class="card-body">' +
+          '<h3 class="card-title">' + escHtml(article.title) + '</h3>' +
+          '<p class="card-excerpt">' + escHtml(article.excerpt) + '</p>' +
+          '<div class="card-meta">' +
+            '<span class="card-meta-item">' +
+              '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+              escHtml(article.author) +
+            '</span>' +
+            '<span class="card-meta-item">' +
+              '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>' +
+              formatDate(article.date) +
+            '</span>' +
+          '</div>' +
+          '<span class="card-read-more">' +
+            'Read more ' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>' +
+          '</span>' +
+        '</div>';
+
+      card.addEventListener("click", function () { openModal(article); });
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModal(article); }
+      });
+
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Modal ─────────────────────────────────────────────────────────────────
+
+  var overlay    = document.getElementById("modal-overlay");
+  var modalClose = document.getElementById("modal-close");
+  var modalContent = document.getElementById("modal-content");
+
+  function openModal(article) {
+    var thumbHtml = article.thumbnailUrl
+      ? '<img class="modal-thumb" src="' + escHtml(article.thumbnailUrl) + '" alt="' + escHtml(article.title) + '" />'
+      : '<div class="modal-thumb-placeholder">Kanto</div>';
+
+    modalContent.innerHTML =
+      thumbHtml +
+      '<div class="modal-body">' +
+        '<h2 class="modal-title" id="modal-title">' + escHtml(article.title) + '</h2>' +
+        '<div class="modal-meta">' +
+          '<span class="modal-meta-item">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+            escHtml(article.author) +
+          '</span>' +
+          '<span class="modal-meta-item">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>' +
+            formatDate(article.date) +
+          '</span>' +
+        '</div>' +
+        '<p class="modal-text">' + escHtml(article.body) + '</p>' +
+      '</div>';
+
+    overlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    modalClose.focus();
+  }
+
+  function closeModal() {
+    overlay.style.display = "none";
+    document.body.style.overflow = "";
+  }
+
+  if (modalClose) modalClose.addEventListener("click", closeModal);
+  if (overlay) {
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) closeModal();
+    });
+  }
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && overlay && overlay.style.display !== "none") closeModal();
+  });
+
+})();
